@@ -53,13 +53,15 @@ def dataset_shape_info():
 def descriptive_statistics():
     """Display descriptive statistics"""
     df = pd.read_csv('CallCenterData.csv')
+    df_copy  =df.copy()
+    df_copy= df_copy.drop(columns=['month'], errors='ignore') 
     print("=" * 80)
     print("DESCRIPTIVE STATISTICS")
     print("=" * 80)
-    print(df.describe())
+    print(df_copy.describe())
     print("\nAdditional Statistics:")
-    print(f"Skewness:\n{df.skew()}\n")
-    print(f"Kurtosis:\n{df.kurtosis()}\n")
+    print(f"Skewness:\n{df_copy.skew()}\n")
+    print(f"Kurtosis:\n{df_copy.kurtosis()}\n")
     print("\n")
 
 def check_duplicates():
