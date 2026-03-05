@@ -34,13 +34,17 @@
 
 | Column        | Kurtosis | Interpretation |
 |---------------|----------|----------------------------|
-| Healthcare    | -1.15     | Highly Negatively-skewed;  |
-| Telecom       | -1.50     | Highly Negatively-skewed;  |
-| Banking       | -1.32     | Highly Negatively right-skewed;  |
-| Technology    | -1.33     | Highly Negatively-skewed;  |
-| Insurance     | -1.04     | Highly Negatively-skewed;  |
-| # Phone Lines | +3.76     | Highly Positively-skewed; |
-| # Channels    | -1.44     | Highly Negatively-skewed;  |
+| Healthcare    | -1.15     | Light-tailed; platykurtic (somewhat flatter than normal) |
+| Banking       | -1.32     | Light-tailed; platykurtic (somewhat flatter than normal)  |
+| Technology    | -1.33     | Light-tailed; platykurtic (somewhat flatter than normal)  |
+| Insurance     | -1.04     | Light-tailed; platykurtic (flatter than normal) |
+| # Phone Lines | +3.76     | Heavy-tailed;  Strongly leptokurtic (Taller peak than normal)|
+| # Channels    | -1.44     | Light-tailed; platykurtic (flatter than normal) |
+
+-Conclusion
+-Most values are low in the overall range of each field, with occasional high values stretching the distribution to the right(outliers).
+-Extremely large values are rare, even more so than in a normal distribution.
+-This suggests that the call centre may occasionally experience jumps in monthly interactions, but these spikes are unlikely to be very large.
 
 ---
 
