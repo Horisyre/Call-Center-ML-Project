@@ -50,10 +50,44 @@
 
 ## 5. Correlations
 
+### Correlation Matrix
+
+|                | Healthcare | Telecom | Banking | Technology | Insurance | #ofphonelines | #noofchannels |
+|----------------|-----------|---------|---------|------------|-----------|---------------|---------------|
+| Healthcare     | 1.00 | 0.98 | 0.99 | 0.94 | 0.40 | 0.48 | -0.07 |
+| Telecom        | 0.98 | 1.00 | 0.98 | 0.96 | 0.51 | 0.44 | -0.06 |
+| Banking        | 0.99 | 0.98 | 1.00 | 0.94 | 0.39 | 0.46 | -0.06 |
+| Technology     | 0.94 | 0.96 | 0.94 | 1.00 | 0.61 | 0.41 | -0.08 |
+| Insurance      | 0.40 | 0.51 | 0.39 | 0.61 | 1.00 | 0.06 | -0.05 |
+| #ofphonelines  | 0.48 | 0.44 | 0.46 | 0.41 | 0.06 | 1.00 | -0.05 |
+| #noofchannels  | -0.07 | -0.06 | -0.06 | -0.08 | -0.05 | -0.05 | 1.00 |
+
+-Healthcare, Telecom, Banking, Technology → extremely high correlations (0.94–0.99)→ these industries move very similarly.
+
+-Insurance → moderate correlation with others (0.39–0.61).
+
+-#ofphonelines → moderate correlation (~0.41–0.48).
+
+-#noofchannels → almost no correlation with the other variables (around -0.05 to -0.08). 
+
+-The number of phone lines and channels may not show meaningful correlations with individual industries because these resources are designed to handle aggregate demand across all industries. As a result, it is more appropriate to analyze their relationship with total industry interactions rather than with each industry separately.
+
+### Total Demand Correlation Matrix
+
+|                  | #ofphonelines | #noofchannels | Total_Interactions |
+|------------------|---------------|---------------|------------------|
+| #ofphonelines       | 1.00          | -0.05         | 0.47          |
+| #noofchannels       | -0.05         | 1.00          | -0.07         |
+| Total_Interactions  | 0.47          | -0.07         | 1.00          |
+
+-Here, we see little change in the correlation between the number of channels and total interactions, suggesting that there is no clear linear relationship between how channels are provisioned and the number of interactions each month.
+
+-Similarly, there is little change in the correlation between the number of phone lines and total industry activity, which suggests that no single industry dominates the total number of phone lines provisioned.  
 
 ---
 
 ## 6. Anomalies & Outliers
+
 - Highlight months with 0 phone lines, unusual high call volume months and how this may affect forecasting
 
 ---

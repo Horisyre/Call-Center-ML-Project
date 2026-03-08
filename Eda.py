@@ -123,6 +123,27 @@ def correlation_matrix():
         print("No numeric columns found for correlation analysis")
     print("\n")
 
+def Total_demand_correlation_matrix():
+    """Total Industry Demand and Capacity Correlation Matrix"""
+    df = pd.read_csv('CallCenterData.csv')
+
+    df['Total_Interactions'] = df['Healthcare'] + df['Telecom'] + df['Banking'] + df['Technology'] + df['Insurance']
+    total_demand_df = df[['#ofphonelines', '#noofchannels', 'Total_Interactions']]
+    if not total_demand_df.empty:
+        corr_matrix = total_demand_df.corr()
+        
+        # Visualize correlation matrix
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', center=0, 
+                    fmt='.2f', square=True, linewidths=0.5)
+        plt.title('Total Interactions Correlation Matrix Heatmap')
+        plt.tight_layout()
+        plt.savefig('correlation_matrix.png', dpi=100, bbox_inches='tight')
+        plt.show()
+    else:
+        print("No numeric columns found for correlation analysis")
+    print("\n")
+
 def plot_distributions():
     """Plot distributions for numeric columns"""
     df = pd.read_csv('CallCenterData.csv')
@@ -264,4 +285,4 @@ def run_all_analysis():
     print("=" * 80)
 
 if __name__ == "__main__":
-    descriptive_statistics()
+    Total_demand_correlation_matrix()
