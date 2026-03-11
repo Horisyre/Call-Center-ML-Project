@@ -42,9 +42,11 @@
 | # Channels    | -1.44     | Light-tailed; platykurtic (flatter than normal) |
 
 -Conclusion
--Most values are low in the overall range of each field, with occasional high values stretching the distribution to the right(outliers).
--Extremely large values are rare, even more so than in a normal distribution.
--This suggests that the call centre may occasionally experience jumps in monthly interactions, but these spikes are unlikely to be very large.
+
+Most values are low in the overall range of each field, with occasional high values stretching the distribution to the right(outliers).
+Extremely large values are rare, even more so than in a normal distribution.
+
+This suggests that the call centre may occasionally experience jumps in monthly interactions, but these spikes are unlikely to be very large.
 
 ---
 
@@ -88,7 +90,16 @@
 
 ## 6. Anomalies & Outliers
 
-- Highlight months with 0 phone lines, unusual high call volume months and how this may affect forecasting
+### Aggregarated monthly Phone Lines Distribution
+
+-Each record in the dataset corresponds to the last day of the month. 
+However, using monthly_demand_info(), we observe two instances for February: one ending on the 28th and another on the 29th (leap year). 
+
+To ensure data consistency, we will treat all records for the same month as belonging to that month, ignoring the day.
+
+![Monthly Phone Lines Distribution](../images/Aggregated_Monthly_Phone_Lines.png)
+
+-Here we observe five months with zero instances of phone lines provisioned. This is not an input error; since these occurrences are confined to a single year, it is likely due to operational factors. This assumption is strengthened by the fact that it only happens within that year, and interactions between the call centre and  client industries during those months still took place.
 
 ---
 

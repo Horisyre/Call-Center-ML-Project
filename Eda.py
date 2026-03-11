@@ -1,3 +1,5 @@
+from calendar import month
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -144,7 +146,7 @@ def Total_demand_correlation_matrix():
         print("No numeric columns found for correlation analysis")
     print("\n")
 
-def plot_distributions():
+def plot_distributions():#change this to a bigger sublot to show all industries in one plot
     """Plot distributions for numeric columns"""
     df = pd.read_csv('CallCenterData.csv')
     print("=" * 80)
@@ -170,6 +172,34 @@ def plot_distributions():
         plt.savefig(f'distribution_{col}.png', dpi=100, bbox_inches='tight')
         plt.show()
     print("\n")
+
+def monthly_demand_info():
+    """Monthly Demand and Capacity Summary"""
+    df= pd.read_csv('CallCenterData.csv')
+    monthly_summary = df.groupby('month').agg({
+        '#ofphonelines': 'sum',           # sum all calls in the month
+        '#noofchannels': 'sum'      # sum all phone lines provisioned
+    }).reset_index()
+    print(monthly_summary)
+
+
+def phone_lines_box_plot():
+    """Distribution of Phone Lines Provisioned by Month"""
+    fig = plt.figure(figsize =(10, 7))
+    df = pd.read_csv('CallCenterData.csv')
+
+
+    df_copy = df.copy()
+    df_copy['month'] = df_copy['month'].apply(lambda x: x[3:])
+    
+    d = [df[df['month'] == month]['#ofphonelines'] for month in df['month'].unique()]
+    plt.boxplot(d,showmeans=True)
+
+    plt.ylabel("Number of Phone Lines Provisioned")
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    plt.xticks(ticks=range(1, len(months)+1), labels=months, rotation=45 )
+    plt.show()
 
 def scatter_matrix():
     """Generate pairwise scatter plots"""
@@ -285,4 +315,4 @@ def run_all_analysis():
     print("=" * 80)
 
 if __name__ == "__main__":
-    Total_demand_correlation_matrix()
+    phone_lines_box_plot()
