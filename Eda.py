@@ -173,15 +173,63 @@ def plot_distributions():#change this to a bigger sublot to show all industries 
         plt.show()
     print("\n")
 
-def monthly_demand_info():
+def monthly_demand_info():#To do: Add a line plot showing monthly trends for each industry and total interactions
     """Monthly Demand and Capacity Summary"""
     df= pd.read_csv('CallCenterData.csv')
-    monthly_summary = df.groupby('month').agg({
-        '#ofphonelines': 'sum',           # sum all calls in the month
+    df['month'] = df['month'].apply(lambda x: x[3:])
+    # Define the correct month order
+    month_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+
+    # Convert 'month' to an ordered Categorical
+    df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
+    monthly_summary = df.groupby('month', as_index=False).sum()
+    print(monthly_summary)
+    
+
+def overall_montly_demand_trends():
+    """Monthly Demand and Capacity Trends over all years"""
+    df = pd.read_csv('CallCenterData.csv')
+    df['month'] = df['month'].apply(lambda x: x[3:])
+    month_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+
+    # Convert 'month' to an ordered Categorical
+    df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
+    monthly_summary = df.groupby('month', as_index=False).sum()
+    print(monthly_summary)
+    
+    plt.figure(figsize=(12, 6))
+    plt.plot(monthly_summary['month'], monthly_summary['#ofphonelines'], marker='o', label='Total Interactions')
+    plt.plot(monthly_summary['month'], monthly_summary['#noofchannels'], marker='o', label='Total Phone Lines Provisioned')
+    plt.title('Overall Monthly Demand Across All Years')
+    plt.xlabel('Month')
+    plt.ylabel('Count')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig('monthly_trends.png', dpi=100, bbox_inches='tight')
+    plt.show()
+
+def yearly_demand_trends():#To do: Add a line plot showing yearly trends for each industry and total interactions
+    """Yearly Demand and Capacity Trends"""
+    df = pd.read_csv('CallCenterData.csv')
+    df['year'] = df['month'].apply(lambda x: x[:3])
+    
+    yearly_summary = df.groupby('year').agg({
+        '#ofphonelines': 'sum',           # sum all calls in the year
         '#noofchannels': 'sum'      # sum all phone lines provisioned
     }).reset_index()
-    print(monthly_summary)
-
+    
+    plt.figure(figsize=(12, 6))
+    plt.plot(yearly_summary['year'], yearly_summary['#ofphonelines'], marker='o', label='Total Interactions')
+    plt.plot(yearly_summary['year'], yearly_summary['#noofchannels'], marker='o', label='Total Phone Lines Provisioned')
+    plt.title('Yearly Demand and Capacity Trends')
+    plt.xlabel('Year')
+    plt.ylabel('Count')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig('yearly_trends.png', dpi=100, bbox_inches='tight')
+    plt.show()
 
 def phone_lines_box_plot():
     """Distribution of Phone Lines Provisioned by Month"""
@@ -315,4 +363,4 @@ def run_all_analysis():
     print("=" * 80)
 
 if __name__ == "__main__":
-    phone_lines_box_plot()
+    overall_montly_demand_trends()

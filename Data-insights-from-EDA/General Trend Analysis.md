@@ -1,25 +1,47 @@
-# Call Center Dataset – Exploratory Data Analysis (EDA)
 
-## 1. Introduction
-- Dataset description: monthly call volumes by industry, number of phone lines, number of communciation channels
-- Purpose: Identify trends, anomalies and insights for forecasting and operational planning
+# Data Insights from EDA
+
+## General Trend Analysis
+
+1. Time-Series Trends
+
+Line charts of interactions over time (daily, weekly, monthly, quarterly).
+
+Identify upward, downward, or stable trends.
+
+Highlight peaks and troughs that may indicate high-demand periods or bottlenecks.
+
+1. Seasonal / Cyclical Patterns
+
+Look for repeating patterns across months or quarters.
+
+Example: Higher interactions at the beginning of a quarter or during specific campaigns.
+
+Use this to inform forecasting and staffing.
+
+1. Rate of Change
+
+Measure percentage change between periods (week-over-week, month-over-month).
+
+Helps identify sudden spikes or drops in demand that may require attention.
+
+1. Distribution Analysis
+
+Histogram or density plots to see how interactions are distributed over the period.
+
+Detect skew, outliers, or unusual variation in activity levels.
+
+1. Variability / Fluctuations
+
+Measure variance or standard deviation of interactions over time.
+
+High variability indicates periods of unstable demand, which may stress provisioned resources.
+
+Low variability suggests stable, predictable operations
 
 ---
 
-## 2. Data Summary
-- No missing values were found in the dataset.
-
-- Zero values for the number of phone lines occur over a single year across several months. This may indicate a reporting issue, manual input error, or a temporary shift in communication infrastructure (e.g., use of VoIP or other digital channels).
-
-- Importantly, this is not considered an operational anomaly, since other communication channels remained active during these months and call volumes continued.
-
----
-
-## 3. General Trend Analysis
-
-
----
-## 4. Skewness & Kurtosis
+## Skewness & Kurtosis
 
 | Column        | Skewness | Interpretation |
 |---------------|----------|----------------------------|
@@ -31,6 +53,7 @@
 | # Phone Lines | -0.3     | Slightly left-skewed; mostly stable, with zero months possibly indicating alternative voice channels |
 | # Channels    | +0.8     | Moderately right-skewed; gradual shift toward multi-channel communication |
 
+---
 
 | Column        | Kurtosis | Interpretation |
 |---------------|----------|----------------------------|
@@ -50,7 +73,7 @@ This suggests that the call centre may occasionally experience jumps in monthly 
 
 ---
 
-## 5. Correlations
+## Correlations
 
 ### Correlation Matrix
 
@@ -87,30 +110,3 @@ This suggests that the call centre may occasionally experience jumps in monthly 
 -Similarly, there is little change in the correlation between the number of phone lines and total industry activity, which suggests that no single industry dominates the total number of phone lines provisioned.  
 
 ---
-
-## 6. Anomalies & Outliers
-
-### Aggregarated monthly Phone Lines Distribution
-
--Each record in the dataset corresponds to the last day of the month. 
-However, using monthly_demand_info(), we observe two instances for February: one ending on the 28th and another on the 29th (leap year). 
-
-To ensure data consistency, we will treat all records for the same month as belonging to that month, ignoring the day.
-
-![Monthly Phone Lines Distribution](../images/Aggregated_Monthly_Phone_Lines.png)
-
--Here we observe five months with zero instances of phone lines provisioned. This is not an input error; since these occurrences are confined to a single year, it is likely due to operational factors. This assumption is strengthened by the fact that it only happens within that year, and interactions between the call centre and  client industries during those months still took place.
-
----
-
-## 7. Operational Insights
-
----
-
-## 8. Recommendations for Forecasting
-- How to handle skewed data,outliers,algorithms we could use and models we could use
-
----
-
-## 9. Conclusion
-- Summary of key insights, How we will use this data for forecasting in call center calls
