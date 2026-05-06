@@ -1,20 +1,20 @@
-from calendar import month
-
+import calendar
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 import warnings
-warnings.filterwarnings('ignore')
+from sklearn.model_selection import train_test_split
+
 
 # Set visualization styles
 sns.set_style("whitegrid")
 plt.rcParams['figure.figsize'] = (12, 6)
-
+#---------------------------------GENERAL EDA------------------------------------------------
 def readHead():
     """Display first few rows of dataset"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("FIRST 5 ROWS")
     print("=" * 80)
@@ -23,7 +23,7 @@ def readHead():
 
 def CheckNan():
     """Check for missing values"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("MISSING VALUES ANALYSIS")
     print("=" * 80)
@@ -39,7 +39,7 @@ def CheckNan():
 
 def dataset_shape_info():
     """Display dataset shape and info"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("DATASET SHAPE AND INFO")
     print("=" * 80)
@@ -54,7 +54,7 @@ def dataset_shape_info():
 
 def descriptive_statistics():
     """Display descriptive statistics"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     df_copy  =df.copy()
     df_copy= df_copy.drop(columns=['month'], errors='ignore') 
     print("=" * 80)
@@ -68,7 +68,7 @@ def descriptive_statistics():
 
 def check_duplicates():
     """Check for duplicate rows"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("DUPLICATE ROWS ANALYSIS")
     print("=" * 80)
@@ -81,7 +81,7 @@ def check_duplicates():
 
 def unique_values_analysis():
     """Display unique value counts for each column"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("UNIQUE VALUES ANALYSIS")
     print("=" * 80)
@@ -92,7 +92,7 @@ def unique_values_analysis():
 
 def categorical_value_counts():
     """Display value counts for categorical columns"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("CATEGORICAL VALUE COUNTS")
     print("=" * 80)
@@ -104,7 +104,7 @@ def categorical_value_counts():
 
 def correlation_matrix():
     """Generate and display correlation matrix"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("CORRELATION MATRIX")
     print("=" * 80)
@@ -127,7 +127,7 @@ def correlation_matrix():
 
 def Total_demand_correlation_matrix():
     """Total Industry Demand and Capacity Correlation Matrix"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
 
     df['Total_Interactions'] = df['Healthcare'] + df['Telecom'] + df['Banking'] + df['Technology'] + df['Insurance']
     total_demand_df = df[['#ofphonelines', '#noofchannels', 'Total_Interactions']]
@@ -146,73 +146,39 @@ def Total_demand_correlation_matrix():
         print("No numeric columns found for correlation analysis")
     print("\n")
 
-def plot_distributions():#change this to a bigger sublot to show all industries in one plot
-    """Plot distributions for numeric columns"""
-    df = pd.read_csv('CallCenterData.csv')
-    print("=" * 80)
-    print("PLOTTING DISTRIBUTIONS")
-    print("=" * 80)
-    numeric_cols = df.select_dtypes(include=[np.number]).columns
+def monthly_variance():
+    """Variance of Demand and Capacity by Month"""
+    df = pd.read_csv('data/CallCenterData.csv')
+    df['month'] = df['month'].apply(lambda x: x[3:])
+    month_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     
-    for col in numeric_cols:
-        fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-        
-        # Histogram with KDE
-        axes[0].hist(df[col].dropna(), bins=30, edgecolor='black', alpha=0.7)
-        axes[0].set_title(f'Distribution of {col}')
-        axes[0].set_xlabel(col)
-        axes[0].set_ylabel('Frequency')
-        
-        # Box plot
-        axes[1].boxplot(df[col].dropna())
-        axes[1].set_title(f'Box Plot of {col}')
-        axes[1].set_ylabel(col)
-        
-        plt.tight_layout()
-        plt.savefig(f'distribution_{col}.png', dpi=100, bbox_inches='tight')
-        plt.show()
+    # Convert 'month' to an ordered Categorical
+    df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
+    
+    monthly_variance = df.groupby('month').agg({
+        '#ofphonelines': 'var',
+        '#noofchannels': 'var'
+    }).reset_index()
+    
+    print("=" * 80)
+    print("MONTHLY VARIANCE OF DEMAND AND CAPACITY")
+    print("=" * 80)
+    print(monthly_variance)
     print("\n")
 
-def monthly_demand_info():#To do: Add a line plot showing monthly trends for each industry and total interactions
-    """Monthly Demand and Capacity Summary"""
-    df= pd.read_csv('CallCenterData.csv')
-    df['month'] = df['month'].apply(lambda x: x[3:])
-    # Define the correct month order
-    month_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
-    # Convert 'month' to an ordered Categorical
-    df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
-    monthly_summary = df.groupby('month', as_index=False).sum()
-    print(monthly_summary)
-    
-
-def overall_montly_demand_trends():
-    """Monthly Demand and Capacity Trends over all years"""
-    df = pd.read_csv('CallCenterData.csv')
-    df['month'] = df['month'].apply(lambda x: x[3:])
-    month_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-
-    # Convert 'month' to an ordered Categorical
-    df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
-    monthly_summary = df.groupby('month', as_index=False).sum()
-    print(monthly_summary)
-    
-    plt.figure(figsize=(12, 6))
-    plt.plot(monthly_summary['month'], monthly_summary['#ofphonelines'], marker='o', label='Total Interactions')
-    plt.plot(monthly_summary['month'], monthly_summary['#noofchannels'], marker='o', label='Total Phone Lines Provisioned')
-    plt.title('Overall Monthly Demand Across All Years')
-    plt.xlabel('Month')
-    plt.ylabel('Count')
-    plt.xticks(rotation=45)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig('monthly_trends.png', dpi=100, bbox_inches='tight')
-    plt.show()
-
-def yearly_demand_trends():#To do: Add a line plot showing yearly trends for each industry and total interactions
+def yearly_demand_trends():
     """Yearly Demand and Capacity Trends"""
-    df = pd.read_csv('CallCenterData.csv')
-    df['year'] = df['month'].apply(lambda x: x[:3])
+    df = pd.read_csv('data/CallCenterData.csv')
+    df['month'] = df['month'].apply(lambda x: x[3:])
+
+    years_array = []
+    x=1
+    for month in df['month']:
+        years_array.append(x)
+        if month.startswith('Dec'):
+            x += 1
+    df['year'] = years_array
     
     yearly_summary = df.groupby('year').agg({
         '#ofphonelines': 'sum',           # sum all calls in the year
@@ -220,8 +186,8 @@ def yearly_demand_trends():#To do: Add a line plot showing yearly trends for eac
     }).reset_index()
     
     plt.figure(figsize=(12, 6))
-    plt.plot(yearly_summary['year'], yearly_summary['#ofphonelines'], marker='o', label='Total Interactions')
-    plt.plot(yearly_summary['year'], yearly_summary['#noofchannels'], marker='o', label='Total Phone Lines Provisioned')
+    plt.plot(yearly_summary['year'], yearly_summary['#ofphonelines'], marker='o', label='Total Phone Lines Provisioned')
+    plt.plot(yearly_summary['year'], yearly_summary['#noofchannels'], marker='o', label='Total channels Provisioned')
     plt.title('Yearly Demand and Capacity Trends')
     plt.xlabel('Year')
     plt.ylabel('Count')
@@ -234,7 +200,7 @@ def yearly_demand_trends():#To do: Add a line plot showing yearly trends for eac
 def phone_lines_box_plot():
     """Distribution of Phone Lines Provisioned by Month"""
     fig = plt.figure(figsize =(10, 7))
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
 
 
     df_copy = df.copy()
@@ -251,7 +217,7 @@ def phone_lines_box_plot():
 
 def scatter_matrix():
     """Generate pairwise scatter plots"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("SCATTER MATRIX")
     print("=" * 80)
@@ -267,7 +233,7 @@ def scatter_matrix():
 
 def outlier_detection():
     """Detect outliers using IQR method"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("OUTLIER DETECTION (IQR Method)")
     print("=" * 80)
@@ -289,7 +255,7 @@ def outlier_detection():
 
 def statistical_tests():
     """Perform statistical tests"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("STATISTICAL TESTS")
     print("=" * 80)
@@ -307,7 +273,7 @@ def statistical_tests():
 
 def pairwise_plots():
     """Create pairwise relationship plots"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("PAIRWISE PLOTS")
     print("=" * 80)
@@ -323,7 +289,7 @@ def pairwise_plots():
 
 def quantile_analysis():
     """Display quantile analysis"""
-    df = pd.read_csv('CallCenterData.csv')
+    df = pd.read_csv('data/CallCenterData.csv')
     print("=" * 80)
     print("QUANTILE ANALYSIS")
     print("=" * 80)
@@ -335,32 +301,5 @@ def quantile_analysis():
         print(df[col].quantile(quantiles))
     print("\n")
 
-def run_all_analysis():
-    """Run all exploratory data analysis techniques"""
-    print("\n")
-    print("#" * 80)
-    print("# COMPREHENSIVE EXPLORATORY DATA ANALYSIS (EDA)")
-    print("#" * 80)
-    print("\n")
-    
-    readHead()
-    dataset_shape_info()
-    CheckNan()
-    check_duplicates()
-    unique_values_analysis()
-    categorical_value_counts()
-    descriptive_statistics()
-    quantile_analysis()
-    correlation_matrix()
-    outlier_detection()
-    statistical_tests()
-    scatter_matrix()
-    plot_distributions()
-    pairwise_plots()
-    
-    print("=" * 80)
-    print("EDA ANALYSIS COMPLETE!")
-    print("=" * 80)
-
 if __name__ == "__main__":
-    overall_montly_demand_trends()
+   monthly_variance()

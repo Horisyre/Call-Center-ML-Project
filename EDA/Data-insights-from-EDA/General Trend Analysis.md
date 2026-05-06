@@ -3,22 +3,6 @@
 
 ## General Trend Analysis
 
-1. Time-Series Trends
-
-Line charts of interactions over time (daily, weekly, monthly, quarterly).
-
-Identify upward, downward, or stable trends.
-
-Highlight peaks and troughs that may indicate high-demand periods or bottlenecks.
-
-1. Seasonal / Cyclical Patterns
-
-Look for repeating patterns across months or quarters.
-
-Example: Higher interactions at the beginning of a quarter or during specific campaigns.
-
-Use this to inform forecasting and staffing.
-
 1. Rate of Change
 
 Measure percentage change between periods (week-over-week, month-over-month).
